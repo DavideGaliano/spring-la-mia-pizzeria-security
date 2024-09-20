@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:insert="~{fragments/fragments :: head}"></head>
+<body>
+	
+	<header class="container">
+		
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/fragments :: navbar('ingredienti')} "></nav>
+
+    <!-- /Navbar -->
+		
+	</header>
+    
+	<main class="container">
+		<div class="row">
+			<div class="col-12">
+				<h1 class="py-4 mb-2 text-center">
+					Crea Ingrediente
+				</h1>
+				<th:block>
+					<form th:action="@{/ingredienti/create}" method="POST" id="ingrediente-form" th:object="${ingrediente}">
+						
+						<!--<th:block th:if="${#fields.hasErrors()}">
+							
+						<ul class="alert alert-danger p-3">
+							<li class="ps-3" th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+						
+						</ul>
+						
+						</th:block>-->
+						
+					  <div class="mb-3">
+					    <label for="ingredienteName" class="form-label">Nome</label>
+					    <input type="text" class="form-control" id="nome" aria-describedby="ingredienteName" th:field="*{nome}">
+						<div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+					  </div>
+					  
+					<div class="d-flex justify-content-between">
+						
+						<input type="submit" class="btn btn-primary btn-lg" value="Crea">
+						<input type="reset" class="btn btn-warning btn-lg" value="Reset">
+						
+					</div>
+					</form>
+				</th:block>
+				
+			</div>
+			
+		</div>
+		
+		
+		
+	</main>
+
+    <!-- Bootstrap JS and dependencies -->
+	<div th:replace="~{fragments/fragments :: scripts} "></div>
+</body>
+</html>

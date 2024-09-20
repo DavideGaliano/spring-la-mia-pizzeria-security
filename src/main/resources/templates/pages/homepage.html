@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:insert="~{fragments/fragments :: head}"></head>
+<body>
+	<header class="container">
+		
+    <!-- Navbar -->
+	
+    <nav th:replace="~{fragments/fragments :: navbar('home')} "></nav>
+
+    <!-- /Navbar -->
+		
+	</header>
+    
+	
+	<div class="container mt-5">
+        <h1>Pizzeria ZZ </h1>
+		<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0Q35ALaVH04K7qznOFkCyEkkqALsawMI5Pw&s" class="img-fluid mt-3">
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+	<div th:replace="~{fragments/fragments :: scripts} "></div>
+</body>
+</html>

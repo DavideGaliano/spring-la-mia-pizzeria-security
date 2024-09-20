@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:insert="~{fragments/fragments :: head}"></head>
+<body>
+	
+	<header class="container">
+		
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/fragments :: navbar('pizze')} "></nav>
+
+    <!-- /Navbar -->
+		
+	</header>
+    
+	<main class="container">
+		<div class="row">
+			<div class="col-12">
+				<h1 class="py-4 mb-2 text-center">
+					Dettaglio Pizza [[ ${pizza.name}]]
+				</h1>
+				<th:block>
+					<div class="card" >
+						<th:block th:unless="${pizza.url}">
+					  <img th:src="${pizza.url}" class="card-img-top" alt="${pizza.name}">
+					  </th:block>
+					  <div class="card-body">
+					    <h5 class="card-title">[[${pizza.name}]]</h5>
+					    <p class="card-text">[[${pizza.description}]]</p>
+						<h6 class="card-text">Ingredienti</h6>
+						<ul>
+							<th:block th:each="ingrediente : ${ingredienti}">
+							<li th:text="${ingrediente.nome}" ></li>
+							</th:block>
+						</ul>
+						<p class="card-text">[[${#numbers.formatCurrency(pizza.prezzo)}]]</p>
+						<h2>Offerte Speciali</h2>
+						<th:block th:if="${offerteSpeciali.size > 0}">
+						    <table class="table">
+						        <tr>
+						            <th>Titolo</th>
+						            <th>Data Inizio</th>
+						            <th>Data Fine</th>
+						            <th>Azioni</th>
+						        </tr>
+						        <tr th:each="offerta : ${offerteSpeciali}">
+						            <td th:text="${offerta.titolo}"></td>
+						            <td th:text="${offerta.dataInizio}"></td>
+						            <td th:text="${offerta.dataFine}"></td>
+						            <td>
+						                <a th:href="@{/pizze/offerte/{offertaId}/edit(offertaId=${offerta.id})}" class="btn btn-secondary">Modifica</a>
+						            </td>
+						        </tr>
+						    </table>					
+					</th:block>
+							<a th:href="@{/offerte/create}" class="btn btn-secondary">Crea nuova offerta speciale</a>
+					    <a th:href="@{/pizze}" class="btn btn-primary">Indietro</a>
+					  </div>
+					</div>
+				</th:block>
+			</div>
+			
+		</div>
+		
+		
+		
+	</main>
+
+    <!-- Bootstrap JS and dependencies -->
+	<div th:replace="~{fragments/fragments :: scripts} "></div>
+</body>
+</html>

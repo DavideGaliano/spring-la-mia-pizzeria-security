@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:insert="~{fragments/fragments :: head}"></head>
+<body>
+	
+	<header class="container">
+		
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/fragments :: navbar('pizze')} "></nav>
+
+    <!-- /Navbar -->
+		
+	</header>
+    
+	<main class="container">
+		<div class="row">
+			<div class="col-12">
+				<h1 class="py-4 mb-2 text-center">
+					Modifica Offerta Speciale
+				</h1>
+				<th:block>
+					<form th:action="@{/pizze/offerte/{offertaId}/edit(offertaId=${offertaSpeciale.id})}" th:object="${offertaSpeciale}" method="post">
+					        
+					        <!-- Titolo dell'Offerta -->
+					        <div class="mb-3">
+					            <label for="titolo" class="form-label">Titolo</label>
+					            <input type="text" class="form-control" th:field="*{titolo}" id="titolo">
+					            <div class="text-danger" th:if="${#fields.hasErrors('titolo')}" th:errors="*{titolo}"></div>
+					        </div>
+
+					        <!-- Data Inizio -->
+					        <div class="mb-3">
+					            <label for="dataInizio" class="form-label">Data Inizio</label>
+					            <input type="date" class="form-control" th:field="*{dataInizio}" id="dataInizio">
+					            <div class="text-danger" th:if="${#fields.hasErrors('dataInizio')}" th:errors="*{dataInizio}"></div>
+					        </div>
+
+					        <!-- Data Fine -->
+					        <div class="mb-3">
+					            <label for="dataFine" class="form-label">Data Fine</label>
+					            <input type="date" class="form-control" th:field="*{dataFine}" id="dataFine">
+					            <div class="text-danger" th:if="${#fields.hasErrors('dataFine')}" th:errors="*{dataFine}"></div>
+					        </div>
+
+					        <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+					    </form>
+						<!-- Link per tornare al dettaglio della pizza -->
+						    <a th:href="@{/pizze/{id}(id=${offertaSpeciale.pizza.id})}" class="btn btn-secondary mt-3">Torna al Dettaglio Pizza</a>
+				</th:block>
+				
+			</div>
+			
+		</div>
+		
+		
+		
+	</main>
+
+    <!-- Bootstrap JS and dependencies -->
+	<div th:replace="~{fragments/fragments :: scripts} "></div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Il tuo carrello</title>
+</head>
+<body>
+    <h1>Il tuo carrello</h1>
+
+    <th:block th:if="${carrello.pizze.size() > 0}">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrizione</th>
+                    <th>Prezzo</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pizza : ${carrello.pizze}">
+                    <td th:text="${pizza.name}"></td>
+                    <td th:text="${pizza.description}"></td>
+                    <td th:text="${#numbers.formatCurrency(pizza.prezzo)}"></td>
+                    <td>
+                        <form th:action="@{/carrello/remove/{id}(id=${pizza.id})}" method="POST">
+                            <button type="submit" class="btn btn-danger">Rimuovi</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+
+    <th:block th:unless="${carrello.pizze.size() > 0}">
+        <p>Il carrello è vuoto.</p>
+    </th:block>
+
+</body>
+</html>

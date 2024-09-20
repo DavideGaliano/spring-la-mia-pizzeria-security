@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crea Nuovo Utente</title>
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" >
+	<link rel="stylesheet" th:href="@{/css/style.css}" >
+
+    <!-- JavaScript per la logica dinamica -->
+    <script type="text/javascript">
+        function toggleFields() {
+            var userType = document.getElementById("userType").value;
+            
+            var privateFields = document.getElementById("privateFields");
+            var companyFields = document.getElementById("companyFields");
+
+            if (userType === "Private") {
+                privateFields.style.display = "block";
+                companyFields.style.display = "none";
+            } else if (userType === "Company") {
+                privateFields.style.display = "none";
+                companyFields.style.display = "block";
+            } else {
+                privateFields.style.display = "none";
+                companyFields.style.display = "none";
+            }
+        }
+
+        // Esegui la funzione al caricamento della pagina per impostare la visualizzazione iniziale
+        window.onload = function() {
+            toggleFields();
+        };
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Crea Nuovo Utente</h1>
+        <form th:action="@{/users/create}" th:object="${user}" method="post" class="mt-4">
+            
+            <!-- Selezione del tipo di utente -->
+            <div class="mb-3">
+                <label for="userType" class="form-label">Tipo Utente</label>
+                <select id="userType" name="userType" class="form-control" onchange="toggleFields()">
+                    <option th:each="type : ${userTypes}" th:value="${type}" th:text="${type}"></option>
+                </select>
+            </div>
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" th:field="*{username}" id="username">
+                <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" th:field="*{email}" id="email">
+                <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+
+            <!-- Se campi per PrivateUser -->
+            <div id="privateFields" style="display:none;">
+                <!-- Nome -->
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">Nome</label>
+                    <input type="text" class="form-control" th:field="*{firstName}" id="firstName">
+                    <div class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                </div>
+
+                <!-- Cognome -->
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Cognome</label>
+                    <input type="text" class="form-control" th:field="*{lastName}" id="lastName">
+                    <div class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                </div>
+            </div>
+
+            <!-- Se campi per CompanyUser -->
+            <div id="companyFields" style="display:none;">
+                <!-- Nome Azienda -->
+                <div class="mb-3">
+                    <label for="companyName" class="form-label">Nome Azienda</label>
+                    <input type="text" class="form-control" th:field="*{firstName}" id="companyName">
+                    <div class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                </div>
+
+                <!-- Partita IVA -->
+                <div class="mb-3">
+                    <label for="piva" class="form-label">Partita IVA</label>
+                    <input type="text" class="form-control" th:field="*{lastName}" id="piva">
+                    <div class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crea Utente</button>
+        </form>
+    </div>
+</body>
+</html>
