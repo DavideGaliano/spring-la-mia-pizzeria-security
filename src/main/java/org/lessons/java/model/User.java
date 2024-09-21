@@ -4,6 +4,7 @@ package org.lessons.java.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,6 +25,19 @@ public class User {
 
     private String username;
     private String password;
+    private String email;
+    
+ // Attributo per indicare il tipo di utente (Private o Company)
+    @Column(name = "user_type")
+    private String userType;
+    
+ // Campi extra per gli utenti privati
+    private String firstName;
+    private String lastName;
+    
+ // Campi extra per gli utenti aziendali
+    private String companyName;
+    private String piva;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -65,4 +79,52 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getPiva() {
+		return piva;
+	}
+
+	public void setPiva(String piva) {
+		this.piva = piva;
+	}
 }

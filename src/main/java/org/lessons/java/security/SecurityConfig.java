@@ -39,11 +39,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/", "/pizze", "/ingredienti", "/css/**", "/js/**").permitAll()
+                .requestMatchers( "/css/**", "/js/**", "/webjars/**", "/images/**").permitAll()
+                .requestMatchers("/", "/pizze/index-order", "/ingredienti", "/pages/login", "/users/create").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin((form) -> form
-                .loginPage("/login")
+                .loginPage("/pages/login")
                 .permitAll()
             )
             .logout((logout) -> logout.permitAll());

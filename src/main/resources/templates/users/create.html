@@ -50,6 +50,11 @@
                 <input type="text" class="form-control" th:field="*{username}" id="username">
                 <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
             </div>
+			<!--Password-->
+			<div class="mb-3">
+			                <label for="password" class="form-label">Password</label>
+			                <input type="password" class="form-control" th:field="*{password}" id="password">
+			            </div>
 
             <!-- Email -->
             <div class="mb-3">

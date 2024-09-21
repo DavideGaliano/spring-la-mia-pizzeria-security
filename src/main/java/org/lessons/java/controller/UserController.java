@@ -1,12 +1,14 @@
 package org.lessons.java.controller;
 
 import java.util.List;
+import java.util.Set;
 
-import org.lessons.java.model.CompanyUser;
-import org.lessons.java.model.PrivateUser;
+import org.lessons.java.model.Role;
 import org.lessons.java.model.User;
+import org.lessons.java.repo.RoleRepository;
 import org.lessons.java.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,18 +27,24 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private RoleRepository roleRepository;
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     // Mostra il form di creazione di un nuovo utente
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("user", new PrivateUser());  // Predefinito su PrivateUser
+        model.addAttribute("user", new User()); 
         model.addAttribute("userTypes", List.of("Private", "Company"));
         return "users/create";
     }
 
     // Salva il nuovo utente
     @PostMapping("/create")
-    public String createUser(@Valid @ModelAttribute("user") PrivateUser user,
+    public String createUser(@Valid @ModelAttribute("user") User user,
                              BindingResult bindingResult,
                              @ModelAttribute("userType") String userType,  // Aggiungiamo il tipo utente selezionato
                              Model model) {
@@ -44,24 +52,33 @@ public class UserController {
             model.addAttribute("userTypes", List.of("Private", "Company"));
             return "users/create";  // Ritorna al form in caso di errore
         }
+        
+     // Codifica la password usando BCrypt
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        
+     // Imposta il tipo di utente selezionato
+        user.setUserType(userType);
+        
+     // Recupera il ruolo predefinito per l'utente
+        Role userRole = roleRepository.findByName("ROLE_USER");
+        user.setRoles(Set.of(userRole));
 
+     // Aggiungi campi extra in base al tipo di utente
         if (userType.equals("Private")) {
-            // Se è un PrivateUser, salviamo l'utente privato
-            PrivateUser privateUser = new PrivateUser();
-            privateUser.setUsername(user.getUsername());
-            privateUser.setEmail(user.getEmail());
-            privateUser.setFirstName(user.getFirstName());
-            privateUser.setLastName(user.getLastName());
-            userRepository.save(privateUser);
+            user.setFirstName(user.getFirstName());
+            user.setLastName(user.getLastName());
+            user.setCompanyName(null);  // Puliamo i campi aziendali
+            user.setPiva(null);
         } else if (userType.equals("Company")) {
-            // Se è un CompanyUser, creiamo un oggetto CompanyUser
-            CompanyUser companyUser = new CompanyUser();
-            companyUser.setUsername(user.getUsername());
-            companyUser.setEmail(user.getEmail());
-            companyUser.setCompanyName(user.getFirstName());  // Simile a nome utente
-            companyUser.setPiva(user.getLastName());  // Qui simuliamo la partita IVA
-            userRepository.save(companyUser);
+            user.setCompanyName(user.getCompanyName());
+            user.setPiva(user.getPiva());
+            user.setFirstName(null);  // Puliamo i campi privati
+            user.setLastName(null);
         }
+        
+     // Salva l'utente nel database
+        userRepository.save(user);
 
         return "redirect:/pizze/index-order";  // Reindirizza alle pizze
     }
