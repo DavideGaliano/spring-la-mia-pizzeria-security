@@ -18,11 +18,13 @@
             </thead>
             <tbody>
                 <tr th:each="pizza : ${carrello.pizze}">
+					<td th:text="${pizza.id}"></td>
                     <td th:text="${pizza.name}"></td>
                     <td th:text="${pizza.description}"></td>
                     <td th:text="${#numbers.formatCurrency(pizza.prezzo)}"></td>
                     <td>
                         <form th:action="@{/carrello/remove/{id}(id=${pizza.id})}" method="POST">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <button type="submit" class="btn btn-danger">Rimuovi</button>
                         </form>
                     </td>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 
@@ -47,7 +48,8 @@ public class UserController {
     public String createUser(@Valid @ModelAttribute("user") User user,
                              BindingResult bindingResult,
                              @ModelAttribute("userType") String userType,  // Aggiungiamo il tipo utente selezionato
-                             Model model) {
+                             Model model,
+                             RedirectAttributes attributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("userTypes", List.of("Private", "Company"));
             return "users/create";  // Ritorna al form in caso di errore
@@ -79,7 +81,9 @@ public class UserController {
         
      // Salva l'utente nel database
         userRepository.save(user);
+        
+        attributes.addFlashAttribute("successMessage", "User "+ user.getUsername() +" creato");
 
-        return "redirect:/pizze/index-order";  // Reindirizza alle pizze
+        return "redirect:/pizze";  // Reindirizza alle pizze
     }
 }

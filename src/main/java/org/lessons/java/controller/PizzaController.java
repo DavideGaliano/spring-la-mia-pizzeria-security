@@ -7,11 +7,14 @@ import org.lessons.java.model.OffertaSpeciale;
 import org.lessons.java.model.Pizza;
 import org.lessons.java.model.User;
 import org.lessons.java.repo.PizzaRepository;
+import org.lessons.java.security.CustomUserDetailsService;
 import org.lessons.java.service.CarrelloService;
 import org.lessons.java.service.IngredienteService;
 import org.lessons.java.service.OffertaSpecialeService;
 import org.lessons.java.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,6 +43,9 @@ public class PizzaController {
     
     @Autowired
     private CarrelloService carrelloService;
+    
+    @Autowired
+    private CustomUserDetailsService userService;
 	
 	//READ
 	
@@ -76,11 +82,16 @@ public class PizzaController {
 	
 	// Aggiungi la pizza al carrello
     @PostMapping("/add-to-cart/{id}")
-    public String addToCart(@PathVariable("id") Integer pizzaId, Model model, User user) {
+    public String addToCart(@PathVariable("id") Integer pizzaId, @AuthenticationPrincipal UserDetails userDetails, Model model, RedirectAttributes attributes) {
         Pizza pizza = pizzaService.findById(pizzaId);
+        
+     // Recupera l'utente autenticato
+        User user = userService.findByUsername(userDetails.getUsername());
+        
+     // Aggiungi la pizza al carrello dell'utente
         carrelloService.addPizzaToCarrello(user, pizza);
-        model.addAttribute("successMessage", "Pizza aggiunta al carrello con successo!");
-        return "redirect:/pizze";
+        attributes.addFlashAttribute("successMessage", "Pizza con id "+ pizzaId +" è stata aggiunta al carrello");
+        return "redirect:/pizze/index-order";
     }
 
 	

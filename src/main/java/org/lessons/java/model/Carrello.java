@@ -1,8 +1,10 @@
 package org.lessons.java.model;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,13 +21,13 @@ public class Carrello {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
         name = "carrello_pizze",
         joinColumns = @JoinColumn(name = "carrello_id"),
         inverseJoinColumns = @JoinColumn(name = "pizza_id")
     )
-    private List<Pizza> pizze;
+    private List<Pizza> pizze = new ArrayList<>();  // Inizializza la lista delle pizze
 
     @OneToOne
     private User utente;
@@ -55,11 +57,17 @@ public class Carrello {
         this.utente = utente;
     }
 
+ // Metodo per aggiungere una pizza al carrello
     public void addPizza(Pizza pizza) {
+        if (pizze == null) {
+            pizze = new ArrayList<>();  // Inizializza la lista se è null
+        }
         this.pizze.add(pizza);
     }
 
     public void removePizza(Pizza pizza) {
-        this.pizze.remove(pizza);
+        if (pizze != null) {
+            this.pizze.remove(pizza);
+        }
     }
 }

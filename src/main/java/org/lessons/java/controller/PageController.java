@@ -13,5 +13,10 @@ public class PageController {
 	public String homepage(Model model) {
 		return "/pages/homepage";
 	}
+	
+	@GetMapping("pages/login")
+	public String login(Model model) {
+		return "/pages/login";
+	}
 
 }
